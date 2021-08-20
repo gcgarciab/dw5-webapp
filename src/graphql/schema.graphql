@@ -1,0 +1,51 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Access {
+    access: String!
+}
+
+type Account {
+    balance: Int!
+    lastChange: String!
+    userId: String!
+}
+
+type Mutation {
+    authenticate(credentials: CredentialsInput): Tokens!
+    createTransaction(transaction: TransactionInput!): Transaction
+    refreshToken(refresh: String!): Access!
+}
+
+type Query {
+    accountByUserId(userId: String!): Account
+    transactionsByUserId(userId: String!): [Transaction]
+}
+
+type Tokens {
+    access: String!
+    refresh: String!
+}
+
+type Transaction {
+    date: String!
+    id: String!
+    userIdDestiny: String!
+    userIdOrigin: String!
+    value: Int!
+}
+
+input CredentialsInput {
+    password: String!
+    username: String!
+}
+
+input TransactionInput {
+    userIdDestiny: String!
+    userIdOrigin: String!
+    value: Int!
+}
