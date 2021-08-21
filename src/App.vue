@@ -1,16 +1,10 @@
 <template>
   <header>
     <h1>Banco UN</h1>
-
-    <div id="nav" v-if="isAuth">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/user/auth">Login</router-link> |
-      <router-link to="/user/pedro">Profile</router-link>
-    </div>
+    <app-navbar v-if="isAuth" @logout="isAuth = false"/>
   </header>
 
-  <router-view @user-auth="login"/>
+  <router-view @logged="isAuth = true"/>
 
   <footer>
     <h2>MissionTIC 2022</h2>
@@ -18,24 +12,50 @@
 </template>
 
 <script>
+import AppNavbar from "@/components/AppNavbar";
+import gql from "graphql-tag";
+
 export default {
+  components: { AppNavbar },
+
   data() {
     return {
-      isAuth: true
+      isAuth: false
     }
   },
 
   created() {
     if (localStorage.getItem('access')) {
       this.isAuth = true
+      this.refreshToken()
     } else {
       this.$router.push({ name: 'UserAuth' })
     }
   },
 
   methods: {
-    login(data, username) {
-      console.log(data, username)
+    async refreshToken() {
+      await this.$apollo.mutate({
+        mutation: gql`
+          mutation ($refreshToken: String!) {
+            refreshToken(refresh: $refreshToken) {
+              access
+            }
+          }
+        `,
+
+        variables: {
+          refreshToken: localStorage.getItem('refresh')
+        }
+      }).then(result => {
+        console.log(result.data.refreshToken)
+        this.isAuth = true
+        localStorage.setItem('access', result.data.refreshToken.access)
+      }).catch(() => {
+        alert('ERROR: Invalid token!')
+        this.isAuth = false
+        this.$router.push({ name: 'UserAuth' })
+      })
     }
   }
 }
@@ -50,16 +70,22 @@ export default {
   color: #2c3e50;
 }
 
-#nav {
-  padding: 30px;
+body {
+  padding: 0;
+  margin: 0;
 }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+header {
+  background: #2c3e50;
+  color: #fff;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+header h1 {
+  margin: 0;
+  font-size: 20px;
 }
 </style>

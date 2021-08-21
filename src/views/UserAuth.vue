@@ -66,8 +66,6 @@ export default {
       .catch(() => {
         alert('ERROR: Invalid credentials !!')
       })
-
-      console.log(this.username, this.password)
     },
 
     setUserData(data) {
@@ -76,7 +74,7 @@ export default {
       localStorage.setItem('refresh', data.refresh)
       localStorage.setItem('userId', data.userId)
       localStorage.setItem('username', this.username)
-
+      this.$emit('logged')
       this.$router.push({ name: 'Home' })
     }
   }
