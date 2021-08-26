@@ -1,7 +1,7 @@
 <template>
   <header>
     <h1>Banco UN</h1>
-    <app-navbar v-if="isAuth" @logout="isAuth = false"/>
+    <AppNavbar v-if="isAuth" @logout="isAuth = false"/>
   </header>
 
   <router-view @logged="isAuth = true"/>
@@ -54,9 +54,15 @@ export default {
       }).catch(() => {
         alert('ERROR: Invalid token!')
         this.isAuth = false
+        localStorage.clear()
         this.$router.push({ name: 'UserAuth' })
       })
-    }
+    },
+
+    logged() {
+      this.isAuth = true
+      this.userId = localStorage.getItem('userId')
+    },
   }
 }
 </script>
@@ -73,6 +79,7 @@ export default {
 body {
   padding: 0;
   margin: 0;
+  overflow-x: hidden;
 }
 
 header {

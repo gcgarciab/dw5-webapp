@@ -1,7 +1,9 @@
 <template>
   <div id="nav">
-    <router-link to="/">Home</router-link>
-    <router-link to="/user/pedro">Profile</router-link>
+    <router-link to="/">Home</router-link> |
+    <router-link :to="'/user/' + userId">Profile</router-link> |
+    <router-link to="/user/transactions/history">History</router-link> |
+    <router-link to="/user/transactions/create">Transactions</router-link> |
     <button class="nav-button" @click="logout">Logout</button>
   </div>
 </template>
@@ -10,12 +12,22 @@
 export default {
   name: "AppNavbar",
 
+  data() {
+    return {
+      userId: null
+    }
+  },
+
   methods: {
     logout() {
       localStorage.clear()
       this.$emit('logout')
       this.$router.push({ name: 'UserAuth' })
     }
+  },
+
+  created() {
+    this.userId = localStorage.getItem('userId')
   }
 }
 </script>

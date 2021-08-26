@@ -1,3 +1,6 @@
+import Product from '@/views/Product'
+import UserHistory from '@/views/UserHistory'
+import UserTransactions from '@/views/UserTransactions'
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import UserAuth from '@/views/UserAuth'
@@ -15,10 +18,25 @@ const routes = [
     component: UserAuth
   },
   {
-    path: '/user/:username',
+    path: '/user/:id',
     name: 'User',
     component: User
-  }
+  },
+  {
+    path: '/user/transactions/history',
+    name: 'UserHistory',
+    component: UserHistory
+  },
+  {
+    path: '/user/transactions/create',
+    name: 'UserTransactions',
+    component: UserTransactions
+  },
+  {
+    path: '/product/:id',
+    name: 'Product',
+    component: Product
+  },
 ]
 
 const router = createRouter({
